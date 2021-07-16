@@ -1,7 +1,6 @@
 import BaseController from '../utils/BaseController'
 import { Auth0Provider } from '@bcwdev/auth0provider'
 import { hauntingsService } from '../services/HauntingsService'
-import { IteratorNext } from 'es-abstract'
 import { testimoniesService } from '../services/TestimoniesService'
 
 export class HauntingsController extends BaseController {
