@@ -1,25 +1,52 @@
 <template>
-  <div class="home flex-grow-1 d-flex flex-column align-items-center justify-content-center">
-    <img src="https://bcw.blob.core.windows.net/public/img/8600856373152463" alt="CodeWorks Logo">
-    <h1 class="my-5 bg-dark text-light p-3 rounded d-flex align-items-center">
-      <span class="mx-2 text-white">Vue 3 Starter</span>
-    </h1>
+  <div class="container-fluid gradient text-white">
+    <div class="row banner">
+    </div>
+    <div class="row justify-content-center mt-3">
+      <div class="col-md-8 text-center">
+        <h1>Haunted Highway</h1>
+      </div>
+    </div>
+    <div class="row text-center h-50 align-items-center">
+      <div class="col-6">
+        <button class="btn btn-outline-warning" @click="login">
+          Login
+        </button>
+      </div>
+      <div class="col-6">
+        <button class="btn btn-outline-warning" @click="logout">
+          SignUp
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import { AuthService } from '../services/AuthService'
 export default {
-  name: 'Home'
+  setup() {
+    return {
+      async login() {
+        AuthService.loginWithPopup()
+      },
+      async logout() {
+        AuthService.logout({ returnTo: window.location.origin })
+      }
+    }
+  }
 }
 </script>
 
 <style scoped lang="scss">
-.home{
-  text-align: center;
-  user-select: none;
-  > img{
-    height: 200px;
-    width: 200px;
-  }
+.gradient{
+  background: linear-gradient( #0f0c29, #302b63, #24243e);
+}
+.banner{
+  background-image: url("https://images-na.ssl-images-amazon.com/images/I/91vZTSbuF8L._RI_.jpg");
+  background-size: cover;
+  background-position: center;
+  border-bottom: solid 3px white;
+  height: 35vh;
 }
 </style>
