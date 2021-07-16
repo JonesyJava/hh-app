@@ -16,9 +16,11 @@
     </div>
     <div class="row text-center bottom">
       <div class="col-4">
-        <button class="btn btn-info">
-          Map
-        </button>
+        <router-link :to="{name: 'Map'}">
+          <button class="btn btn-info">
+            Map
+          </button>
+        </router-link>
       </div>
       <div class="col-4">
         <button class="btn btn-danger">
