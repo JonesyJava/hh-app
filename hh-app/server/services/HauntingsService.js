@@ -19,8 +19,12 @@ class HauntingsService {
     return await dbContext.Haunting.create(data)
   }
 
-  async editHaunting(update, req) {
-    return await dbContext.Haunting.findOneAndUpdate({ _id: update.id, creatorId: req.userInfo.id }, update, { new: true }).populate('creator')
+  async editHaunting(id, userId, body) {
+    const haunting = await dbContext.Haunting.findOneAndUpdate({ _id: id, creatorId: userId }, body, { new: true })
+    if (!haunting) {
+      throw new BadRequest('Invalid ID: Haunting does not exist...YET')
+    }
+    return haunting
   }
 
   async deleteHaunting(req) {
