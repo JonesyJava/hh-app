@@ -1,29 +1,65 @@
 import BaseController from '../utils/BaseController'
 import { Auth0Provider } from '@bcwdev/auth0provider'
+import { hauntingsService } from '../services/HauntingsService'
+import { IteratorNext } from 'es-abstract'
 
 export class HauntingsController extends BaseController {
   constructor() {
     super('api/hauntings')
     this.router
-      .get('', this.getAllHauntings)
-      // NOTE: Beyond this point all routes require Authorization tokens (the user must be logged in)
+    // NOTE: Beyond this point all routes require Authorization tokens (the user must be logged in)
       .use(Auth0Provider.getAuthorizedUserInfo)
-      .post('', this.create)
+      .get('', this.getAllHauntings)
+      .get('/:id', this.getHauntingById)
+      .put('/:id', this.editHaunting)
+      .post('', this.createHaunting)
+      .delete('/:id', this.deleteHaunting)
   }
 
   async getAllHauntings(req, res, next) {
     try {
-      return res.send(['Haunting1', 'Haunting2'])
+      const data = await hauntingsService.findHauntings(req.query)
+      return res.send(data)
     } catch (error) {
       next(error)
     }
   }
 
-  async create(req, res, next) {
+  async getHauntingById(req, res, next) {
+    try {
+      return res.send(await hauntingsService.findHauntingById(req.params.id))
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async createHaunting(req, res, next) {
     try {
       // NOTE NEVER TRUST THE CLIENT TO ADD THE CREATOR ID
       req.body.creatorId = req.userInfo.id
-      res.send(req.body)
+      const haunting = (await hauntingsService.createHaunting(req.body))
+      res.send(await hauntingsService.findHauntingById(haunting._id))
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async editHaunting(req, res, next) {
+    try {
+      req.body.creatorId = req.userInfo.id
+      res.send(await hauntingsService.editHaunting(req.params.id, req.userInfo.id, req.body))
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async deleteHaunting(req, res, next) {
+    try {
+      const query = {
+        id: req.params.id,
+        creatorId: req.userInfo.id
+      }
+      res.send(await hauntingsService.deleteHaunting(query))
     } catch (error) {
       next(error)
     }
