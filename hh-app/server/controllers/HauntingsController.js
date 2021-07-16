@@ -2,6 +2,7 @@ import BaseController from '../utils/BaseController'
 import { Auth0Provider } from '@bcwdev/auth0provider'
 import { hauntingsService } from '../services/HauntingsService'
 import { IteratorNext } from 'es-abstract'
+import { testimoniesService } from '../services/TestimoniesService'
 
 export class HauntingsController extends BaseController {
   constructor() {
@@ -11,6 +12,7 @@ export class HauntingsController extends BaseController {
       .use(Auth0Provider.getAuthorizedUserInfo)
       .get('', this.getAllHauntings)
       .get('/:id', this.getHauntingById)
+      .get('/:id', this.getTestsByHauntingId)
       .put('/:id', this.editHaunting)
       .post('', this.createHaunting)
       .delete('/:id', this.deleteHaunting)
@@ -28,6 +30,15 @@ export class HauntingsController extends BaseController {
   async getHauntingById(req, res, next) {
     try {
       return res.send(await hauntingsService.findHauntingById(req.params.id))
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async getTestsByHauntingId(req, res, next) {
+    try {
+      const data = await testimoniesService.findTestimonies({ testimonyId: req.params.id })
+      res.send(data)
     } catch (error) {
       next(error)
     }
